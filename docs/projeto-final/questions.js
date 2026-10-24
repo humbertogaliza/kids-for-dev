@@ -7,5 +7,7 @@ window.QUESTIONS = [
   { topic: "🌍 Geografia", question: "Em uma lista de direções [Norte, Sul, Leste, Oeste], qual é a primeira?", choices: ["Sul", "Oeste", "Norte", "Leste"], answer: 2, explanation: "Norte é o primeiro item da lista e tem índice 0 no código." },
   { topic: "🧮 Matemática", question: "Qual destes números é par?", choices: ["7", "9", "11", "8"], answer: 3, explanation: "8 dividido por 2 não deixa resto." },
   { topic: "⏳ História", question: "Em qual século está o ano de 1822?", choices: ["18", "19", "20", "21"], answer: 1, explanation: "O século 19 vai de 1801 até 1900." },
-  { topic: "🪐 Física", question: "Se a distância é 20 metros e o tempo é 4 segundos, qual é a velocidade média?", choices: ["5 metros por segundo", "16 metros por segundo", "24 metros por segundo", "80 metros por segundo"], answer: 0, explanation: "Velocidade média = distância ÷ tempo: 20 ÷ 4 = 5 metros por segundo." }
+  { topic: "🪐 Física", question: "Se a distância é 20 metros e o tempo é 4 segundos, qual é a velocidade média?", choices: ["5 metros por segundo", "16 metros por segundo", "24 metros por segundo", "80 metros por segundo"], answer: 0, explanation: "Velocidade média = distância ÷ tempo: 20 ÷ 4 = 5 metros por segundo." },
+  { topic: "🗣️ Inglês", question: "Como se diz casa em inglês?", choices: ["sun", "house", "cat", "blue"], answer: 1, explanation: "House significa casa em inglês." },
+  { topic: "💬 Espanhol", question: "Como se diz vermelho em espanhol?", choices: ["verde", "azul", "rojo", "sol"], answer: 2, explanation: "Rojo significa vermelho em espanhol." }
 ];

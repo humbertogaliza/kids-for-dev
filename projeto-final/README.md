@@ -14,7 +14,7 @@ Abra [`docs/projeto-final/style.css`](../docs/projeto-final/style.css). Troque u
 
 ### 3. Crie perguntas — dados e JavaScript
 
-Abra [`docs/projeto-final/questions.js`](../docs/projeto-final/questions.js). Adicione uma pergunta de cada tema: matemática, geografia, história e física. Cada pergunta tem `topic`, `question`, `choices`, `answer` (posição da resposta certa começando em 0) e `explanation`. Confira os fatos com um adulto. **Conseguiu quando:** a nova pergunta aparece, a resposta certa aumenta a pontuação e uma resposta incorreta mostra a explicação.
+Abra [`docs/projeto-final/questions.js`](../docs/projeto-final/questions.js). Adicione uma pergunta de cada tema: matemática, geografia, história, física, inglês e espanhol. Cada pergunta tem `topic`, `question`, `choices`, `answer` (posição da resposta certa começando em 0) e `explanation`. Para traduzir a nova pergunta, acrescente-a também em [`question-i18n.js`](../docs/projeto-final/question-i18n.js), na mesma posição e com a mesma resposta certa. Confira os fatos com um adulto. **Conseguiu quando:** a nova pergunta aparece nos três idiomas, a resposta certa aumenta a pontuação e uma resposta incorreta mostra a explicação.
 
 ### 4. Apresente sua criação
 

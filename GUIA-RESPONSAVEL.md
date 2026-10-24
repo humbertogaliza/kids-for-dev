@@ -1,6 +1,6 @@
 # Primeira aula: hoje, em 25 minutos
 
-**Preparação (2 min):** abra o [curso](https://humbertogaliza.github.io/kids-for-dev/) em um computador ou tablet com teclado e internet. O carregamento inicial do Python pode levar alguns segundos. Papel e lápis ajudam. O adulto controla o navegador e qualquer publicação.
+**Preparação (2 min):** abra o [curso](https://humbertogaliza.github.io/kids-for-dev/) em um computador ou tablet com teclado e internet. Escolha Português, English ou Español no topo. O carregamento inicial do Python pode levar alguns segundos. Papel e lápis ajudam. O adulto controla o navegador e qualquer publicação.
 
 1. **Convite (3 min):** “Vamos ensinar o computador a dizer alguma coisa? O que você gostaria que ele falasse?” Abra a missão 1. Leia o enunciado junto.
 2. **Experimentação (6 min):** deixe a criança trocar a frase entre aspas e clicar em **Rodar Python**. Pergunte: “O que mudou? O que você acha que as aspas fazem?” Se houver erro, leia a pista com calma.

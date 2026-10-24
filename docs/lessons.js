@@ -1,10 +1,16 @@
 // Cada missão tem uma saída observável. O aluno pode chegar a ela de várias formas.
 window.MODULES = [
   { id: 1, emoji: "🚀", title: "Primeiro contato", subject: "Python" },
+  { id: 6, emoji: "🧩", title: "Tipos de dados", subject: "Python" },
   { id: 2, emoji: "🧮", title: "Matemática em ação", subject: "Matemática" },
+  { id: 7, emoji: "🎒", title: "Coleções de dados", subject: "Python" },
+  { id: 8, emoji: "🔎", title: "Lógica de programação", subject: "Lógica" },
+  { id: 9, emoji: "🗺️", title: "Construindo algoritmos", subject: "Algoritmos" },
   { id: 3, emoji: "🌍", title: "Volta ao mundo", subject: "Geografia" },
   { id: 4, emoji: "⏳", title: "Máquina do tempo", subject: "História" },
-  { id: 5, emoji: "🪐", title: "Laboratório de física", subject: "Física" }
+  { id: 5, emoji: "🪐", title: "Laboratório de física", subject: "Física" },
+  { id: 10, emoji: "🗣️", title: "Laboratório de inglês", subject: "Inglês" },
+  { id: 11, emoji: "💬", title: "Laboratório de espanhol", subject: "Espanhol" }
 ];
 
 window.LESSONS = [
@@ -106,6 +112,34 @@ window.LESSONS = [
   {
     id: 20, module: 5, title: "Missão foguete", goal: "Mostre: Foguete percorreu 30 metros", concept: "Junte variável, multiplicação e texto para contar uma pequena história de física.",
     starter: 'velocidade = 4\ntempo = 5\ndistancia = velocidade * tempo\nprint("Foguete percorreu " + str(distancia) + " metros")', target: "Foguete percorreu 30 metros", required: "velocidade", hint: "Se o tempo é 5 segundos, qual velocidade produz 30 metros? Troque o 4.",
-    celebrate: "Você terminou a trilha de Python! Agora pode construir seu site interativo."
+    celebrate: "Foguete lançado! Você juntou matemática e física em um programa."
   }
 ];
+
+window.LESSONS.push(
+  { id: 21, module: 6, title: "Texto ou número?", goal: "Faça aparecer str, o tipo de um texto.", concept: "Uma string (str) é texto entre aspas. type descobre o tipo de um valor.", starter: "mensagem = 42\nprint(type(mensagem).__name__)", target: "str", required: "type(", hint: "Troque 42 por um texto entre aspas, como \"olá\"." },
+  { id: 22, module: 6, title: "Número inteiro", goal: "Faça aparecer int, o tipo de um número inteiro.", concept: "Um inteiro (int) não tem parte decimal. Entre aspas, 12 vira texto.", starter: 'idade = "12"\nprint(type(idade).__name__)', target: "int", required: "type(", hint: "Retire as aspas de 12 para transformá-lo em inteiro." },
+  { id: 23, module: 6, title: "Número decimal", goal: "Faça aparecer float, o tipo de um número decimal.", concept: "Em Python, números decimais usam ponto: 2.5. O tipo se chama float.", starter: "medida = 2\nprint(type(medida).__name__)", target: "float", required: "type(", hint: "Troque 2 por 2.5. Em Python, use ponto em vez de vírgula." },
+  { id: 24, module: 6, title: "Verdadeiro ou falso", goal: "Faça aparecer bool, o tipo de True ou False.", concept: "Um booleano (bool) só pode ser True ou False. As palavras não têm aspas.", starter: 'porta_aberta = "True"\nprint(type(porta_aberta).__name__)', target: "bool", required: "type(", hint: "Retire as aspas de True. Assim ele vira um valor lógico." },
+  { id: 25, module: 7, title: "Lista de cores", goal: "Mostre verde, o segundo item da lista.", concept: "Uma lista mantém os itens em ordem. O primeiro índice é 0; o segundo é 1.", starter: 'cores = ["azul", "verde", "amarelo"]\nprint(cores[0])', target: "verde", required: "cores[", hint: "Use cores[1] para pegar o segundo item." },
+  { id: 26, module: 7, title: "Dicionário do herói", goal: "Mostre 8, a idade do herói.", concept: "Um dicionário liga uma chave a um valor. Podemos consultar a chave idade.", starter: 'heroi = {"nome": "Luna", "idade": 8}\nprint(heroi["nome"])', target: "8", required: "heroi[", hint: 'Consulte heroi["idade"] em vez de heroi["nome"].' },
+  { id: 27, module: 7, title: "Coordenadas", goal: "Mostre 5, a segunda coordenada.", concept: "Uma tupla parece uma lista, mas seus itens não mudam depois de criada.", starter: "posicao = (3, 5)\nprint(posicao[0])", target: "5", required: "posicao[", hint: "A segunda posição tem índice 1." },
+  { id: 28, module: 7, title: "Sem repetidos", goal: "Mostre 2, a quantidade de emblemas diferentes.", concept: "Um conjunto (set) guarda cada valor uma vez só. len conta os itens únicos.", starter: 'emblemas = {"estrela", "estrela", "lua"}\nprint(len(emblemas) + 1)', target: "2", required: "len(", hint: "len já mostra a quantidade correta. Retire o + 1." },
+  { id: 29, module: 8, title: "Comparar energia", goal: "Faça aparecer True quando a energia for maior que 5.", concept: "Uma comparação responde True ou False. O sinal > significa maior que.", starter: "energia = 7\nprint(energia > 10)", target: "True", required: ">", hint: "Compare energia com 5, não com 10." },
+  { id: 30, module: 8, title: "As duas pistas", goal: "Faça aparecer True quando houver sol e calor.", concept: "and só é True quando as duas condições são verdadeiras.", starter: "sol = True\ntemperatura = 10\nprint(sol and temperatura > 15)", target: "True", required: "and", hint: "Aumente a temperatura para 20." },
+  { id: 31, module: 8, title: "Uma pista basta", goal: "Faça aparecer True quando houver chave ou código.", concept: "or é True quando pelo menos uma condição é verdadeira.", starter: "tem_chave = False\ntem_codigo = True\nprint(tem_chave and tem_codigo)", target: "True", required: "or", hint: "Troque and por or: o código já abre a porta." },
+  { id: 32, module: 8, title: "Inverter a ideia", goal: "Faça aparecer True para porta não aberta.", concept: "not inverte um valor lógico: not False vira True.", starter: "porta_aberta = False\nprint(porta_aberta)", target: "True", required: "not", hint: "Coloque not antes de porta_aberta no print." },
+  { id: 33, module: 9, title: "Plano do robô", goal: "Mostre os passos 1, 2 e 3, nessa ordem.", concept: "Um algoritmo é uma sequência de passos. A ordem muda o resultado.", starter: "passos = [3, 1, 2]\nfor passo in passos:\n    print(passo)", target: "1\n2\n3", required: "for", hint: "Coloque os números da lista na ordem 1, 2, 3." },
+  { id: 34, module: 9, title: "Contador de pares", goal: "Conte os pares de [2, 4, 5, 8] e mostre 3.", concept: "Um algoritmo pode repetir, testar e contar. Cada número par aumenta o contador.", starter: "contagem = 0\nfor numero in [2, 4, 5, 8]:\n    if numero % 2 == 1:\n        contagem += 1\nprint(contagem)", target: "3", required: "for", hint: "Pares deixam resto 0 na divisão por 2. Troque == 1 por == 0." },
+  { id: 35, module: 9, title: "Encontrar um nome", goal: "Mostre True se Sol está na lista.", concept: "O operador in procura um item em uma coleção. É uma busca simples.", starter: 'nomes = ["Lia", "Noa", "Sol"]\nprint("Lua" in nomes)', target: "True", required: " in ", hint: 'Procure "Sol" em vez de "Lua".' },
+  { id: 36, module: 9, title: "Menor distância", goal: "Mostre 3, a menor distância da lista.", concept: "sorted ordena valores; o primeiro item da lista ordenada é o menor.", starter: "distancias = [9, 3, 5]\nprint(sorted(distancias)[-1])", target: "3", required: "sorted(", hint: "Depois de ordenar, pegue o primeiro item com índice 0." },
+  { id: 37, module: 10, title: "Hello, friend!", goal: "Faça o computador dizer Hello!", concept: "Hello é uma saudação em inglês. Vamos escrever e ouvir a palavra.", starter: 'print("Hi")', target: "Hello!", hint: 'Troque Hi por Hello! dentro das aspas.', say: { text: "Hello!", lang: "en-US" } },
+  { id: 38, module: 10, title: "House", goal: "Mostre house, a palavra em inglês para casa.", concept: "Um dicionário pode ligar uma palavra a sua tradução.", starter: 'words = {"casa": "house", "sol": "sun"}\nprint(words["sol"])', target: "house", required: "words[", hint: 'Consulte a chave "casa" no dicionário.', say: { text: "house", lang: "en-US" } },
+  { id: 39, module: 10, title: "Cats", goal: "Mostre cats, o plural de cat.", concept: "Algumas palavras em inglês ganham s no plural. Em Python, + junta textos.", starter: 'animal = "cat"\nprint(animal)', target: "cats", required: "animal", hint: 'Junte animal e "s" com +.', say: { text: "cats", lang: "en-US" } },
+  { id: 40, module: 11, title: "¡Hola!", goal: "Faça o computador dizer ¡Hola!", concept: "Hola é uma saudação em espanhol. O sinal ¡ também faz parte da frase.", starter: 'print("Hola")', target: "¡Hola!", hint: 'Adicione ¡ no começo e ! no fim da palavra.', say: { text: "¡Hola!", lang: "es-ES" } },
+  { id: 41, module: 11, title: "Rojo", goal: "Mostre rojo, a cor vermelha em espanhol.", concept: "Palavras de outro idioma também podem ficar numa lista.", starter: 'colores = ["rojo", "azul", "verde"]\nprint(colores[1])', target: "rojo", required: "colores[", hint: "Rojo é o primeiro item, de índice 0.", say: { text: "rojo", lang: "es-ES" } },
+  { id: 42, module: 11, title: "Hola, mundo", goal: "Mostre Hola, mundo juntando dois textos.", concept: "Em espanhol, mundo também é mundo. + pode montar uma frase.", starter: 'lugar = "mundo"\nprint(lugar)', target: "Hola, mundo", required: "lugar", hint: 'Junte "Hola, " e lugar com +.', say: { text: "Hola, mundo", lang: "es-ES" } }
+);
+
+const moduleOrder = window.MODULES.map((module) => module.id);
+window.LESSONS.sort((a, b) => moduleOrder.indexOf(a.module) - moduleOrder.indexOf(b.module) || a.id - b.id);

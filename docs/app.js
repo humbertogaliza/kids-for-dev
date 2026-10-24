@@ -1,31 +1,41 @@
 const lessons = window.LESSONS;
 const modules = window.MODULES;
-const key = "kids-for-dev-progress-v1";
+const progressKey = "kids-for-dev-progress-v1";
+const localeKey = "kids-for-dev-locale";
+const translations = { en: window.LESSON_EN, es: window.LESSON_ES };
 const $ = (id) => document.getElementById(id);
 
+function storedValue(key) {
+  try { return localStorage.getItem(key); } catch (_) { return null; }
+}
+function chooseLocale() {
+  const requested = new URLSearchParams(location.search).get("lang");
+  const saved = storedValue(localeKey);
+  const browser = navigator.language.slice(0, 2);
+  return [requested, saved, browser, "pt"].find((value) => ["pt", "en", "es"].includes(value));
+}
 function readProgress() {
   try {
-    const saved = JSON.parse(localStorage.getItem(key) || "{}");
-    return { done: Array.isArray(saved.done) ? saved.done.filter(Number.isInteger) : [], drafts: saved.drafts || {}, dates: saved.dates || {} };
+    const saved = JSON.parse(storedValue(progressKey) || "{}");
+    return { done: Array.isArray(saved.done) ? saved.done.filter((id) => Number.isInteger(id) && lessons.some((lesson) => lesson.id === id)) : [], drafts: saved.drafts || {}, dates: saved.dates || {} };
   } catch (_) { return { done: [], drafts: {}, dates: {} }; }
 }
+
+let locale = chooseLocale();
 const progress = readProgress();
-let current = 0;
+let current = Math.max(0, lessons.findIndex((lesson) => !progress.done.includes(lesson.id)));
 let worker;
 let workerReady = false;
 let runTimer;
 let runningLessonId;
+let runningLocale;
 let runningCode;
-const review = {
-  4: "Pausa de explorador: explique para alguém o que print e uma variável fazem.",
-  8: "Pausa de explorador: mude um número e diga por que o resultado mudou.",
-  12: "Pausa de explorador: mostre outra lista e aponte seu primeiro item.",
-  16: "Pausa de explorador: coloque dois fatos em ordem e confira a fonte com um adulto.",
-  20: "Pausa de explorador: explique distância, tempo e velocidade antes do projeto final."
-};
 
+function ui() { return window.COURSE_UI[locale]; }
+function localized(lesson) { return { ...lesson, ...(translations[locale]?.[lesson.id] || {}) }; }
+function draftKey(id) { return `${locale}:${id}`; }
 function save() {
-  try { localStorage.setItem(key, JSON.stringify(progress)); } catch (_) { /* O curso continua sem armazenamento. */ }
+  try { localStorage.setItem(progressKey, JSON.stringify(progress)); } catch (_) { /* O curso funciona sem armazenamento. */ }
 }
 function dayKey() {
   const date = new Date();
@@ -37,17 +47,35 @@ function setFeedback(message, kind = "") {
   $("feedback").className = `feedback ${kind}`;
 }
 function setOutput(message) { $("output").textContent = message; }
-function unlocked(index) { return index === 0 || progress.done.includes(lessons[index - 1].id); }
+function setText(id, value) { $(id).textContent = value; }
 
+function applyLocale() {
+  const t = ui();
+  document.documentElement.lang = { pt: "pt-BR", en: "en", es: "es" }[locale];
+  document.title = t.pageTitle;
+  $("meta-desc").content = t.meta;
+  $("language").value = locale;
+  $("language").setAttribute("aria-label", t.languageLabel);
+  setText("language-label", t.languageLabel);
+  setText("guide-link", t.guide);
+  $("guide-link").href = `https://github.com/humbertogaliza/kids-for-dev/blob/main/GUIA-RESPONSAVEL${locale === "pt" ? "" : `.${locale}`}.md`;
+  for (const [id, value] of Object.entries({ "welcome-tag": t.welcomeTag, "welcome-title": t.welcomeTitle, "welcome-desc": t.welcomeDesc, "project-title": t.projectTitle, "project-desc": t.projectDesc, "project-link": t.projectLink, "editor-title": t.codeTitle, reset: t.reset, "result-title": t.resultTitle, hint: t.hintButton, "adult-note-text": t.adultNote, "footer-text": t.footer, "repo-link": t.repo, speak: t.listen })) setText(id, value);
+  $("project-link").href = `projeto-final/index.html?lang=${locale}`;
+  setText("code-label", { pt: "Escreva seu código Python", en: "Write your Python code", es: "Escribe tu código Python" }[locale]);
+  $("modules").setAttribute("aria-label", { pt: "Módulos do curso", en: "Course modules", es: "Módulos del curso" }[locale]);
+  $("course-meter").setAttribute("aria-label", { pt: "Progresso do curso", en: "Course progress", es: "Progreso del curso" }[locale]);
+  $("daily-meter").setAttribute("aria-label", { pt: "Meta diária", en: "Daily goal", es: "Meta diaria" }[locale]);
+  $("run").textContent = workerReady ? t.ready : t.loading;
+}
 function renderNav() {
   const nav = $("modules");
   nav.replaceChildren();
-  for (const module of modules) {
+  modules.forEach((module) => {
     const group = document.createElement("section");
     group.className = "module";
     const title = document.createElement("h2");
     title.className = "module-heading";
-    title.textContent = `${module.emoji} ${module.title}`;
+    title.textContent = `${module.emoji} ${ui().modules[module.id][0]}`;
     group.append(title);
     const list = document.createElement("div");
     list.className = "mission-list";
@@ -56,86 +84,94 @@ function renderNav() {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "mission";
-      button.disabled = !unlocked(index);
-      button.textContent = `${progress.done.includes(lesson.id) ? "⭐" : unlocked(index) ? "○" : "🔒"} ${lesson.title}`;
+      button.textContent = `${progress.done.includes(lesson.id) ? "⭐" : "○"} ${localized(lesson).title}`;
       if (index === current) button.setAttribute("aria-current", "step");
       button.addEventListener("click", () => show(index));
       list.append(button);
     }
     group.append(list);
     nav.append(group);
-  }
+  });
 }
 function renderProgress() {
   const count = progress.done.length;
-  $("stars").textContent = `⭐ ${count}`;
+  setText("stars", `⭐ ${count}`);
   $("course-fill").style.width = `${100 * count / lessons.length}%`;
+  $("course-meter").setAttribute("aria-valuemax", lessons.length);
   $("course-meter").setAttribute("aria-valuenow", count);
   const today = Math.min(progress.dates[dayKey()] || 0, 3);
-  $("daily-label").textContent = `Meta de hoje: ${today} de 3 missões`;
+  setText("daily-label", ui().daily(today));
   $("daily-fill").style.width = `${100 * today / 3}%`;
   $("daily-meter").setAttribute("aria-valuenow", today);
 }
 function show(index) {
-  if (!unlocked(index)) return;
+  if (index < 0 || index >= lessons.length) return;
   current = index;
-  const lesson = lessons[index];
-  const module = modules.find((item) => item.id === lesson.module);
-  $("step-label").textContent = `Missão ${index + 1} de ${lessons.length}`;
-  $("module-label").textContent = `${module.emoji} Módulo ${module.id} · ${module.subject}`;
-  $("lesson-title").textContent = lesson.title;
-  $("goal").textContent = lesson.goal;
-  $("concept").textContent = lesson.concept;
-  $("code").value = progress.drafts[lesson.id] ?? lesson.starter;
+  const lesson = localized(lessons[index]);
+  const moduleIndex = modules.findIndex((item) => item.id === lesson.module);
+  const module = modules[moduleIndex];
+  const t = ui();
+  setText("step-label", t.step(index + 1, lessons.length));
+  setText("module-label", `${module.emoji} ${t.module(moduleIndex + 1, t.modules[module.id][1])}`);
+  setText("lesson-title", lesson.title);
+  setText("goal", lesson.goal);
+  setText("concept", lesson.concept);
+  $("code").value = progress.drafts[draftKey(lesson.id)] ?? (locale === "pt" ? progress.drafts[lesson.id] : undefined) ?? lesson.starter;
   $("previous").disabled = index === 0;
+  setText("previous", t.previous);
   $("next").disabled = !progress.done.includes(lesson.id);
-  $("next").textContent = index === lessons.length - 1 ? "Ver projeto final →" : "Próxima missão →";
-  setOutput("Aperte “Rodar Python” para ver o resultado.");
-  setFeedback(progress.done.includes(lesson.id) ? "Você já ganhou esta estrela. Pode experimentar mais!" : "");
+  setText("next", index === lessons.length - 1 ? t.finalNext : t.next);
+  $("speak").hidden = !lesson.say || !("speechSynthesis" in window);
+  setOutput(t.outputInitial);
+  setFeedback(progress.done.includes(lesson.id) ? t.alreadyDone : "");
   renderNav();
   renderProgress();
 }
 function startWorker() {
   workerReady = false;
   $("run").disabled = true;
-  $("run").textContent = "Preparando Python…";
+  setText("run", ui().loading);
   worker = new Worker("python-worker.js", { type: "module" });
   worker.onmessage = (event) => {
     if (event.data.type === "ready") {
       workerReady = true;
       $("run").disabled = false;
-      $("run").textContent = "▶ Rodar Python";
+      setText("run", ui().ready);
       return;
     }
     if (event.data.type === "load-error") {
-      $("run").textContent = "Tentar carregar de novo";
+      workerReady = false;
       $("run").disabled = false;
-      setFeedback("Não foi possível carregar Python. Confira a internet e tente novamente.", "error");
+      setText("run", ui().retry);
+      setFeedback(ui().loadError, "error");
       return;
     }
     if (event.data.type === "result") {
       clearTimeout(runTimer);
       $("run").disabled = false;
-      $("run").textContent = "▶ Rodar Python";
-      if (event.data.id === lessons[current].id) evaluate(event.data.result);
+      setText("run", ui().ready);
+      if (event.data.id === lessons[current].id && runningLocale === locale) evaluate(event.data.result);
     }
   };
   worker.onerror = () => {
     clearTimeout(runTimer);
     worker.terminate();
-    setFeedback("O Python parou. Vou prepará-lo de novo.", "error");
-    startWorker();
+    workerReady = false;
+    $("run").disabled = false;
+    setText("run", ui().retry);
+    setFeedback(ui().workerError, "error");
   };
 }
 function evaluate(result) {
-  const lesson = lessons[current];
+  const lesson = localized(lessons[current]);
+  const t = ui();
   if (result.error) {
-    setOutput(result.output || "Nenhuma mensagem apareceu ainda.");
-    setFeedback(`O computador encontrou uma pista: ${result.error}. Confira aspas, parênteses e espaços.`, "error");
+    setOutput(result.output || t.noOutput);
+    setFeedback(`${t.errorPrefix} ${result.error}. ${t.errorTip}`, "error");
     return;
   }
   const output = clean(result.output);
-  setOutput(output || "Seu programa rodou, mas não mostrou nenhuma mensagem. Use print(...). ");
+  setOutput(output || t.noOutput);
   const usedConcept = !lesson.required || runningCode.includes(lesson.required);
   if (output === clean(lesson.target) && usedConcept) {
     if (!progress.done.includes(lesson.id)) {
@@ -143,19 +179,26 @@ function evaluate(result) {
       progress.dates[dayKey()] = (progress.dates[dayKey()] || 0) + 1;
       save();
     }
-    setFeedback(`⭐ Conseguiu! ${lesson.celebrate}${review[lesson.id] ? ` ${review[lesson.id]}` : ""}`, "good");
+    setFeedback(`${t.success}${t.review[lesson.id] ? ` ${t.review[lesson.id]}` : ""}`, "good");
     $("next").disabled = false;
     renderNav();
     renderProgress();
   } else if (!usedConcept) {
-    setFeedback(`Quase! Use ${lesson.required} no código. Toque em “Preciso de uma dica” se quiser uma pista.`, "try");
+    setFeedback(t.needsConcept(lesson.required), "try");
   } else {
-    setFeedback(`Boa tentativa! Sua missão é mostrar exatamente: “${lesson.target.replace(/\n/g, ", ")}”. Tente de novo ou peça uma dica.`, "try");
+    setFeedback(t.wrong(lesson.target.replace(/\n/g, ", ")), "try");
   }
 }
 
+$("language").addEventListener("change", (event) => {
+  locale = event.target.value;
+  try { localStorage.setItem(localeKey, locale); } catch (_) { /* Seleção vale nesta visita. */ }
+  history.replaceState(null, "", `${location.pathname}?lang=${locale}`);
+  applyLocale();
+  show(current);
+});
 $("code").addEventListener("input", () => {
-  progress.drafts[lessons[current].id] = $("code").value;
+  progress.drafts[draftKey(lessons[current].id)] = $("code").value;
   save();
 });
 $("code").addEventListener("keydown", (event) => {
@@ -172,33 +215,46 @@ $("run").addEventListener("click", () => {
     return;
   }
   $("run").disabled = true;
-  $("run").textContent = "Rodando…";
+  setText("run", ui().running);
   setFeedback("");
-  setOutput("O Python está pensando…");
+  setOutput(ui().thinking);
   runningLessonId = lessons[current].id;
+  runningLocale = locale;
   runningCode = $("code").value;
   worker.postMessage({ type: "run", id: runningLessonId, code: runningCode });
   runTimer = setTimeout(() => {
     worker.terminate();
-    if (runningLessonId === lessons[current].id) {
-      setOutput("O programa demorou demais para terminar.");
-      setFeedback("Talvez haja uma repetição sem fim. Confira o código e tente novamente.", "error");
+    if (runningLessonId === lessons[current].id && runningLocale === locale) {
+      setOutput(ui().timeoutOutput);
+      setFeedback(ui().timeoutTip, "error");
     }
     startWorker();
   }, 6000);
 });
 $("reset").addEventListener("click", () => {
-  $("code").value = lessons[current].starter;
-  delete progress.drafts[lessons[current].id];
+  $("code").value = localized(lessons[current]).starter;
+  delete progress.drafts[draftKey(lessons[current].id)];
+  if (locale === "pt") delete progress.drafts[lessons[current].id];
   save();
-  setOutput("Código inicial restaurado. Faça sua mudança e rode de novo.");
+  setOutput(ui().resetOutput);
   setFeedback("");
 });
-$("hint").addEventListener("click", () => setFeedback(`💡 ${lessons[current].hint}`, "try"));
+$("hint").addEventListener("click", () => setFeedback(`${ui().hintPrefix} ${localized(lessons[current]).hint}`, "try"));
+$("speak").addEventListener("click", () => {
+  const sample = lessons[current].say;
+  if (!sample || !("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(sample.text);
+  utterance.lang = sample.lang;
+  utterance.rate = 0.85;
+  speechSynthesis.speak(utterance);
+});
 $("previous").addEventListener("click", () => show(current - 1));
 $("next").addEventListener("click", () => {
-  if (current === lessons.length - 1) window.location.href = "projeto-final/index.html";
+  if (current === lessons.length - 1) location.href = `projeto-final/index.html?lang=${locale}`;
   else show(current + 1);
 });
-show(0);
+
+applyLocale();
+show(current);
 startWorker();
