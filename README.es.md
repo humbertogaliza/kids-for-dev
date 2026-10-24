@@ -9,7 +9,8 @@ Un curso gratuito de programación y creación de juegos para niños y niñas de
 1. Abre [el curso](https://humbertogaliza.github.io/kids-for-dev/?lang=es).
 2. Lee con el niño o la niña la **Misión 1: ¡Hola, explorador!**.
 3. Deja que cambie el código, pulse **Ejecutar Python** y explique qué pasó.
-4. Haz tres misiones en unos 25 minutos, con una pausa si hace falta.
+4. Elige un personaje y un escenario. El bocadillo cambia cuando Python muestra un mensaje. Guarda una tarjeta PNG de la creación para enseñársela a una persona adulta.
+5. Haz tres misiones en unos 25 minutos, con una pausa si hace falta.
 
 La primera visita descarga Python en el navegador y puede tardar unos segundos. El progreso queda en ese navegador, sin cuenta ni seguimiento. Un adulto también puede iniciar el curso localmente con `python3 -m http.server 8000 --directory docs` y abrir `http://localhost:8000/?lang=es`.
 

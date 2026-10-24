@@ -9,7 +9,8 @@ Um curso gratuito de programação e criação de jogos para crianças de 8 a 12
 1. Abra [o curso no navegador](https://humbertogaliza.github.io/kids-for-dev/) e escolha o idioma no topo.
 2. Escolha **Missão 1: Olá, explorador!** e leia o enunciado junto com a criança.
 3. Deixe a criança mudar o código, apertar **Rodar Python** e explicar o que aconteceu.
-4. Faça 3 missões (cerca de 25 minutos), com uma pausa curta entre elas.
+4. Escolha um personagem e um cenário: a fala dele muda com a saída de `print(...)`. Ao terminar, salve um cartão PNG da criação para mostrar a um adulto.
+5. Faça 3 missões (cerca de 25 minutos), com uma pausa curta entre elas.
 
 Ao abrir o site público, o navegador baixa o Python uma vez; isso pode levar alguns segundos. O progresso fica apenas no navegador usado, sem conta e sem coleta de dados. O curso também pode ser aberto localmente com `python3 -m http.server 8000 --directory docs` e `http://localhost:8000`, mesmo sem internet depois de baixar o repositório.
 
@@ -37,6 +38,7 @@ As **42 missões de Python** são interativas no site. O último módulo é um p
 - Uma ideia nova por missão, instruções curtas e resposta imediata.
 - Repetição com variação: um conceito volta em outros contextos.
 - Dicas graduais e erros tratados como pistas, sem punição por tentativas.
+- Um mundo visual reage ao resultado de cada programa e pode ser personalizado; o cartão criado é salvo no aparelho, sem envio a um servidor.
 - Meta diária opcional de 3 missões, estrelas e perguntas de revisão ao fim de cada módulo.
 - Laboratórios de idiomas com exemplos curtos e botão de áudio quando o navegador oferece síntese de voz.
 - A criança explica o raciocínio antes de o adulto mostrar a solução.

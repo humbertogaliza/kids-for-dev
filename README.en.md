@@ -9,7 +9,8 @@ A free coding and game-making course for children aged 8–12. The 42 short Pyth
 1. Open [the course](https://humbertogaliza.github.io/kids-for-dev/?lang=en).
 2. Read **Quest 1: Hello, explorer!** together.
 3. Let the child change the code, press **Run Python**, and explain what happened.
-4. Try three quests in about 25 minutes, with a short break if needed.
+4. Pick a character and a scene. The speech bubble changes when Python prints a message. Save a PNG card of the creation to show an adult.
+5. Try three quests in about 25 minutes, with a short break if needed.
 
 The first visit downloads Python into the browser and may take a few seconds. Progress stays in that browser, without an account or tracking. An adult can serve the course locally with `python3 -m http.server 8000 --directory docs` and open `http://localhost:8000/?lang=en`.
 

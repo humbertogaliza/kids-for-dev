@@ -6,12 +6,12 @@
   <meta name="theme-color" content="#17324d">
   <meta id="meta-desc" name="description" content="Missões curtas e divertidas para aprender Python, matemática, geografia, história, física e idiomas.">
   <title>Kids for Dev — Missões de Python</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="lessons.js" defer></script>
-  <script src="lesson-en.js" defer></script>
-  <script src="lesson-es.js" defer></script>
-  <script src="i18n-ui.js" defer></script>
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20261024-2">
+  <script src="lessons.js?v=20261024-2" defer></script>
+  <script src="lesson-en.js?v=20261024-2" defer></script>
+  <script src="lesson-es.js?v=20261024-2" defer></script>
+  <script src="i18n-ui.js?v=20261024-2" defer></script>
+  <script src="app.js?v=20261024-2" defer></script>
 </head>
 <body>
   <a class="skip" href="#lesson-title">Ir para a missão</a>
@@ -35,6 +35,13 @@
         <div class="concept"><span aria-hidden="true">💡</span><p id="concept"></p></div>
         <button id="speak" class="text-button" type="button" hidden>🔊 Ouvir palavra</button>
       </article>
+      <section class="world-card" aria-labelledby="world-title">
+        <div class="world-heading"><div><p class="eyebrow" id="world-tag">Seu mundo</p><h3 id="world-title">Veja seu código ganhar vida</h3></div><span id="world-stars">⭐ 0</span></div>
+        <div class="world-controls"><label for="avatar" id="avatar-label">Personagem</label><select id="avatar"><option value="robot">🤖 Robô</option><option value="cat">🐱 Gato</option><option value="dragon">🐉 Dragão</option></select><label for="scene" id="scene-label">Cenário</label><select id="scene"><option value="space">🌌 Espaço</option><option value="forest">🌲 Floresta</option><option value="sea">🌊 Mar</option></select></div>
+        <div id="world-scene" class="world-scene space"><span id="world-avatar" class="world-avatar" aria-hidden="true">🤖</span><span id="world-bubble" class="world-bubble">Seu personagem espera pelo primeiro print(...).</span></div>
+        <div class="world-actions"><p id="world-help">Rode Python para mudar a fala. Escolha um personagem e um cenário!</p><button id="save-card" class="secondary" type="button">Salvar minha criação em PNG</button></div>
+        <p id="world-privacy" class="world-privacy">Mostre a imagem a um adulto antes de compartilhá-la. Não escreva dados pessoais no código.</p>
+      </section>
       <section class="editor-card" aria-labelledby="editor-title">
         <div class="editor-heading"><h3 id="editor-title">Seu código</h3><span>Python 🐍</span></div>
         <label id="code-label" class="sr-only" for="code">Escreva seu código Python</label>

@@ -2,6 +2,7 @@ const lessons = window.LESSONS;
 const modules = window.MODULES;
 const progressKey = "kids-for-dev-progress-v1";
 const localeKey = "kids-for-dev-locale";
+const worldKey = "kids-for-dev-world-v1";
 const translations = { en: window.LESSON_EN, es: window.LESSON_ES };
 const $ = (id) => document.getElementById(id);
 
@@ -30,6 +31,15 @@ let runTimer;
 let runningLessonId;
 let runningLocale;
 let runningCode;
+let worldMessage = "";
+const expandedModules = new Set();
+const avatars = { robot: "🤖", cat: "🐱", dragon: "🐉" };
+const scenes = ["space", "forest", "sea"];
+let worldChoice;
+try { worldChoice = JSON.parse(storedValue(worldKey) || "{}"); } catch (_) { worldChoice = {}; }
+if (!worldChoice || typeof worldChoice !== "object" || Array.isArray(worldChoice)) worldChoice = {};
+if (!Object.prototype.hasOwnProperty.call(avatars, worldChoice.avatar)) worldChoice.avatar = "robot";
+if (!scenes.includes(worldChoice.scene)) worldChoice.scene = "space";
 
 function ui() { return window.COURSE_UI[locale]; }
 function localized(lesson) { return { ...lesson, ...(translations[locale]?.[lesson.id] || {}) }; }
@@ -48,6 +58,25 @@ function setFeedback(message, kind = "") {
 }
 function setOutput(message) { $("output").textContent = message; }
 function setText(id, value) { $(id).textContent = value; }
+function renderWorld() {
+  const t = ui();
+  $("avatar").value = worldChoice.avatar;
+  $("scene").value = worldChoice.scene;
+  $("world-avatar").textContent = avatars[worldChoice.avatar];
+  $("world-scene").className = `world-scene ${worldChoice.scene}`;
+  $("world-bubble").textContent = worldMessage || t.worldWaiting;
+  $("world-stars").textContent = `⭐ ${progress.done.length}`;
+  $("save-card").disabled = !worldMessage;
+}
+function updateWorld(output, success = false) {
+  worldMessage = clean(output).replace(/\s+/g, " ").slice(0, 100);
+  renderWorld();
+  if (success) {
+    const scene = $("world-scene");
+    scene.classList.add("celebrate");
+    setTimeout(() => scene.classList.remove("celebrate"), 500);
+  }
+}
 
 function applyLocale() {
   const t = ui();
@@ -60,22 +89,34 @@ function applyLocale() {
   setText("guide-link", t.guide);
   $("guide-link").href = `https://github.com/humbertogaliza/kids-for-dev/blob/main/GUIA-RESPONSAVEL${locale === "pt" ? "" : `.${locale}`}.md`;
   for (const [id, value] of Object.entries({ "welcome-tag": t.welcomeTag, "welcome-title": t.welcomeTitle, "welcome-desc": t.welcomeDesc, "project-title": t.projectTitle, "project-desc": t.projectDesc, "project-link": t.projectLink, "editor-title": t.codeTitle, reset: t.reset, "result-title": t.resultTitle, hint: t.hintButton, "adult-note-text": t.adultNote, "footer-text": t.footer, "repo-link": t.repo, speak: t.listen })) setText(id, value);
+  for (const [id, value] of Object.entries({ "world-tag": t.worldTag, "world-title": t.worldTitle, "avatar-label": t.avatarLabel, "scene-label": t.sceneLabel, "world-help": t.worldHelp, "save-card": t.saveCard, "world-privacy": t.worldPrivacy })) setText(id, value);
+  $("avatar").querySelectorAll("option").forEach((option, index) => { option.textContent = t.avatars[index]; });
+  $("scene").querySelectorAll("option").forEach((option, index) => { option.textContent = t.scenes[index]; });
   $("project-link").href = `projeto-final/index.html?lang=${locale}`;
   setText("code-label", { pt: "Escreva seu código Python", en: "Write your Python code", es: "Escribe tu código Python" }[locale]);
   $("modules").setAttribute("aria-label", { pt: "Módulos do curso", en: "Course modules", es: "Módulos del curso" }[locale]);
   $("course-meter").setAttribute("aria-label", { pt: "Progresso do curso", en: "Course progress", es: "Progreso del curso" }[locale]);
   $("daily-meter").setAttribute("aria-label", { pt: "Meta diária", en: "Daily goal", es: "Meta diaria" }[locale]);
   $("run").textContent = workerReady ? t.ready : t.loading;
+  renderWorld();
 }
 function renderNav() {
   const nav = $("modules");
   nav.replaceChildren();
+  expandedModules.add(lessons[current].module);
   modules.forEach((module) => {
-    const group = document.createElement("section");
+    const group = document.createElement("details");
     group.className = "module";
-    const title = document.createElement("h2");
+    group.open = expandedModules.has(module.id);
+    group.addEventListener("toggle", () => {
+      if (group.open) expandedModules.add(module.id);
+      else expandedModules.delete(module.id);
+    });
+    const title = document.createElement("summary");
     title.className = "module-heading";
-    title.textContent = `${module.emoji} ${ui().modules[module.id][0]}`;
+    const complete = lessons.filter((item) => item.module === module.id && progress.done.includes(item.id)).length;
+    const total = lessons.filter((item) => item.module === module.id).length;
+    title.textContent = `${module.emoji} ${ui().modules[module.id][0]} · ${complete}/${total}`;
     group.append(title);
     const list = document.createElement("div");
     list.className = "mission-list";
@@ -124,6 +165,8 @@ function show(index) {
   $("speak").hidden = !lesson.say || !("speechSynthesis" in window);
   setOutput(t.outputInitial);
   setFeedback(progress.done.includes(lesson.id) ? t.alreadyDone : "");
+  worldMessage = "";
+  renderWorld();
   renderNav();
   renderProgress();
 }
@@ -131,7 +174,7 @@ function startWorker() {
   workerReady = false;
   $("run").disabled = true;
   setText("run", ui().loading);
-  worker = new Worker("python-worker.js", { type: "module" });
+  worker = new Worker("python-worker.js?v=20261024-2", { type: "module" });
   worker.onmessage = (event) => {
     if (event.data.type === "ready") {
       workerReady = true;
@@ -167,7 +210,9 @@ function evaluate(result) {
   const t = ui();
   if (result.error) {
     setOutput(result.output || t.noOutput);
-    setFeedback(`${t.errorPrefix} ${result.error}. ${t.errorTip}`, "error");
+    updateWorld(result.output);
+    const errorType = Object.keys(t.errorHints).find((name) => result.error.includes(name));
+    setFeedback(`${t.errorPrefix} ${result.error}. ${errorType ? t.errorHints[errorType] : t.errorTip}`, "error");
     return;
   }
   const output = clean(result.output);
@@ -180,12 +225,15 @@ function evaluate(result) {
       save();
     }
     setFeedback(`${t.success}${t.review[lesson.id] ? ` ${t.review[lesson.id]}` : ""}`, "good");
+    updateWorld(output, true);
     $("next").disabled = false;
     renderNav();
     renderProgress();
   } else if (!usedConcept) {
+    updateWorld(output);
     setFeedback(t.needsConcept(lesson.required), "try");
   } else {
+    updateWorld(output);
     setFeedback(t.wrong(lesson.target.replace(/\n/g, ", ")), "try");
   }
 }
@@ -193,9 +241,57 @@ function evaluate(result) {
 $("language").addEventListener("change", (event) => {
   locale = event.target.value;
   try { localStorage.setItem(localeKey, locale); } catch (_) { /* Seleção vale nesta visita. */ }
-  history.replaceState(null, "", `${location.pathname}?lang=${locale}`);
+  const url = new URL(location.href);
+  url.searchParams.set("lang", locale);
+  history.replaceState(null, "", url);
   applyLocale();
   show(current);
+});
+for (const id of ["avatar", "scene"]) $(id).addEventListener("change", (event) => {
+  worldChoice[id] = event.target.value;
+  try { localStorage.setItem(worldKey, JSON.stringify(worldChoice)); } catch (_) { /* Escolha vale nesta visita. */ }
+  renderWorld();
+});
+$("save-card").addEventListener("click", () => {
+  if (!worldMessage) return;
+  const canvas = document.createElement("canvas");
+  canvas.width = 960;
+  canvas.height = 540;
+  const context = canvas.getContext("2d");
+  const colors = { space: ["#263767", "#61458d"], forest: ["#b6e3e8", "#48885a"], sea: ["#a6e6f5", "#167baf"] };
+  const fill = context.createLinearGradient(0, 0, 960, 540);
+  colors[worldChoice.scene].forEach((color, index) => fill.addColorStop(index, color));
+  context.fillStyle = fill;
+  context.fillRect(0, 0, 960, 540);
+  context.fillStyle = "#ffffff";
+  context.font = "bold 34px system-ui";
+  context.fillText("Kids for Dev", 48, 68);
+  context.font = "72px system-ui";
+  context.fillText(avatars[worldChoice.avatar], 70, 300);
+  context.fillStyle = "#ffffff";
+  context.fillRect(240, 140, 660, 255);
+  context.fillStyle = "#17324d";
+  context.font = "bold 30px system-ui";
+  const words = worldMessage.split(" ");
+  let line = "";
+  let y = 210;
+  for (const word of words) {
+    const next = line ? `${line} ${word}` : word;
+    if (context.measureText(next).width > 580 && line) {
+      context.fillText(line, 275, y, 580);
+      line = word;
+      y += 42;
+    } else line = next;
+  }
+  if (line) context.fillText(line, 275, y, 580);
+  context.fillStyle = "#ffffff";
+  context.font = "bold 25px system-ui";
+  context.fillText(localized(lessons[current]).title.slice(0, 45), 48, 467);
+  context.fillText(`⭐ ${progress.done.length}`, 830, 68);
+  const link = document.createElement("a");
+  link.download = `kids-for-dev-missao-${lessons[current].id}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
 });
 $("code").addEventListener("input", () => {
   progress.drafts[draftKey(lessons[current].id)] = $("code").value;
