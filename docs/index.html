@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17324d">
+  <meta name="description" content="Missões curtas e divertidas para aprender Python, matemática, geografia, história e física.">
+  <title>Kids for Dev — Missões de Python</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="lessons.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#lesson-title">Ir para a missão</a>
+  <header class="topbar">
+    <div class="brand"><span aria-hidden="true">🐍</span> Kids for Dev</div>
+    <div class="top-actions"><span id="stars" aria-label="Estrelas ganhas">⭐ 0</span><a href="https://github.com/humbertogaliza/kids-for-dev/blob/main/GUIA-RESPONSAVEL.md">Guia do adulto</a></div>
+  </header>
+  <main class="layout">
+    <aside class="sidebar" aria-label="Trilha de missões">
+      <div class="welcome"><span class="eyebrow">Sua aventura começa aqui</span><h1>Aprenda criando!</h1><p>Uma missão de cada vez. Você pode tentar quantas vezes quiser.</p></div>
+      <div class="daily"><strong id="daily-label">Meta de hoje: 0 de 3 missões</strong><div class="meter" role="progressbar" aria-label="Meta diária" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0" id="daily-meter"><span id="daily-fill"></span></div></div>
+      <nav id="modules" aria-label="Módulos do curso"></nav>
+      <section class="project-card"><span aria-hidden="true">🏆</span><h2>Projeto final</h2><p>Crie um site que faz perguntas e conta pontos.</p><a href="projeto-final/index.html">Ver o exemplo</a></section>
+    </aside>
+    <section class="workspace" aria-labelledby="lesson-title">
+      <div class="progress-line"><span id="step-label">Missão 1 de 20</span><div class="meter" role="progressbar" aria-label="Progresso do curso" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0" id="course-meter"><span id="course-fill"></span></div></div>
+      <article class="lesson-card">
+        <p class="eyebrow" id="module-label"></p>
+        <h2 id="lesson-title"></h2>
+        <p class="goal" id="goal"></p>
+        <div class="concept"><span aria-hidden="true">💡</span><p id="concept"></p></div>
+      </article>
+      <section class="editor-card" aria-labelledby="editor-title">
+        <div class="editor-heading"><h3 id="editor-title">Seu código</h3><span>Python 🐍</span></div>
+        <label class="sr-only" for="code">Escreva seu código Python</label>
+        <textarea id="code" rows="8" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off"></textarea>
+        <div class="editor-actions"><button id="run" class="primary" type="button" disabled>Preparando Python…</button><button id="reset" class="secondary" type="button">Recomeçar código</button></div>
+      </section>
+      <section class="result-card" aria-labelledby="result-title"><div class="result-heading"><h3 id="result-title">O que aconteceu?</h3><button id="hint" class="text-button" type="button">Preciso de uma dica</button></div><pre id="output" aria-live="polite">Aperte “Rodar Python” para ver o resultado.</pre><p id="feedback" class="feedback" role="status" aria-live="polite"></p></section>
+      <div class="lesson-nav"><button id="previous" class="secondary" type="button">← Missão anterior</button><button id="next" class="primary" type="button" disabled>Próxima missão →</button></div>
+      <div class="adult-note"><span aria-hidden="true">👨‍👩‍👧</span> Para quem acompanha: pergunte “O que você acha que vai aparecer?” antes de rodar.</div>
+    </section>
+  </main>
+  <footer>Feito para explorar com calma. O progresso fica só neste navegador. <a href="https://github.com/humbertogaliza/kids-for-dev">Código e material do curso</a>.</footer>
+</body>
+</html>

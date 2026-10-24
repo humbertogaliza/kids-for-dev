@@ -1,0 +1,1 @@
+Os textos, enunciados e atividades deste repositório são disponibilizados sob a licença [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/). Você pode adaptar o material com crédito a Kids for Dev e indicação das alterações. Código-fonte segue a licença MIT em `LICENSE`.
