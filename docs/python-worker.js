@@ -3,7 +3,7 @@ let pyodide;
 
 (async () => {
   try {
-    importScripts("https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pyodide.js");
+    const { loadPyodide } = await import("./pyodide/pyodide.mjs");
     pyodide = await loadPyodide();
     postMessage({ type: "ready" });
   } catch (error) {

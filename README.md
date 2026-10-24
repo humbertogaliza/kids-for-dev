@@ -9,7 +9,7 @@ Um curso gratuito de programação e criação de jogos para crianças de 8 a 12
 3. Deixe a criança mudar o código, apertar **Rodar Python** e explicar o que aconteceu.
 4. Faça 3 missões (cerca de 25 minutos), com uma pausa curta entre elas.
 
-O primeiro carregamento do Python usa a internet. O progresso fica apenas no navegador usado, sem conta e sem coleta de dados. O curso também pode ser aberto localmente com `python3 -m http.server 8000 --directory docs` e `http://localhost:8000`.
+Ao abrir o site público, o navegador baixa o Python uma vez; isso pode levar alguns segundos. O progresso fica apenas no navegador usado, sem conta e sem coleta de dados. O curso também pode ser aberto localmente com `python3 -m http.server 8000 --directory docs` e `http://localhost:8000`, mesmo sem internet depois de baixar o repositório.
 
 ## Trilha
 
@@ -36,7 +36,7 @@ Essas escolhas se inspiram em princípios de aprendizagem por prática e feedbac
 
 ## Para quem desenvolve
 
-O site é HTML, CSS e JavaScript sem compilação. Python roda em um Web Worker usando [Pyodide 314.0.7](https://pyodide.org/en/stable/usage/quickstart.html). Os exercícios estão em `docs/lessons.js`. O código da criança é executado no navegador e um limite de tempo reinicia o Worker se houver um loop infinito.
+O site é HTML, CSS e JavaScript sem compilação. Python roda em um Web Worker do tipo módulo usando [Pyodide 314.0.7](https://pyodide.org/en/stable/usage/webworker.html), incluído em `docs/pyodide/` para funcionar sem depender de outro site. Os exercícios estão em `docs/lessons.js`. O código da criança é executado no navegador e um limite de tempo reinicia o Worker se houver um loop infinito.
 
 Para testar localmente, inicie `python3 -m http.server 8000 --directory docs`, abra o endereço no navegador e complete a primeira missão. Confira também o [projeto final](http://localhost:8000/projeto-final/).
 

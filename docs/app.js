@@ -99,7 +99,7 @@ function startWorker() {
   workerReady = false;
   $("run").disabled = true;
   $("run").textContent = "Preparando Python…";
-  worker = new Worker("python-worker.js");
+  worker = new Worker("python-worker.js", { type: "module" });
   worker.onmessage = (event) => {
     if (event.data.type === "ready") {
       workerReady = true;
