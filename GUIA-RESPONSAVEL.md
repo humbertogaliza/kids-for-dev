@@ -2,20 +2,20 @@
 
 **Preparação (2 min):** abra o [curso](https://humbertogaliza.github.io/kids-for-dev/) em um computador ou tablet com teclado e internet. Escolha Português, English ou Español no topo. O carregamento inicial do Python pode levar alguns segundos. Papel e lápis ajudam. O adulto controla o navegador e qualquer publicação.
 
-1. **Convite (3 min):** “Vamos ensinar o computador a dizer alguma coisa? O que você gostaria que ele falasse?” Abra a missão 1. Leia o enunciado junto.
-2. **Experimentação (6 min):** deixe a criança trocar a frase entre aspas e clicar em **Rodar Python**. A frase aparece no balão do personagem; peça que escolha o personagem e o cenário. Pergunte: “O que mudou? O que você acha que as aspas fazem?” Se houver erro, leia a pista com calma.
-3. **Missão 2 (6 min):** peça uma apresentação inventada, como “Sou a Capitã Estrela”. Use apelido fictício. Não digite nome completo nem informação pessoal.
-4. **Missão 3 (6 min):** antes de rodar, pergunte quanto é `4 + 3`. Depois troque um número. Conte os pontos com objetos reais, se útil.
-5. **Fechamento (2 min):** pergunte “O que é uma instrução?” e “Qual erro nos ensinou algo?”. Marque se conseguiu sozinho, com dica ou se quer repetir.
+1. **Descoberta (5 min):** “Vamos ensinar o computador a dizer alguma coisa?” Abra a missão 1. Leia a explicação e o exemplo resolvido; peça que a criança aponte `print`, os parênteses e as aspas.
+2. **Peças (6 min):** peça que monte `print("Lua")`. Ela pode arrastar ou tocar nas peças na ordem certa; **Conferir** explica a resposta. Pergunte por que Lua precisa de aspas.
+3. **Criação (8 min):** deixe que troque a frase no editor e clique em **Rodar Python**. A frase aparece no balão do personagem. Convide-a a escolher personagem e cenário e a experimentar outra frase.
+4. **Fechamento (4 min):** pergunte “O que é uma instrução?” e “Qual erro nos ensinou algo?”. Marque se conseguiu sozinho, com dica ou se quer repetir.
 
 Se quiser guardar a criação, clique em **Salvar minha criação em PNG**. Confira se o texto não contém dados pessoais antes de compartilhar a imagem fora do aparelho.
 
-Se a criança estiver empolgada, faça a missão 4. Se cansar, pare após uma missão: o progresso fica no mesmo navegador. Não é preciso terminar um módulo por dia.
+Se a criança estiver empolgada, avance para a missão 2 e invente uma apresentação com nome fictício. A missão 3 pode ficar para outro dia. O progresso fica no mesmo navegador; não é preciso terminar um módulo por dia.
 
 ## Como ajudar sem tirar a descoberta
 
 - Espere alguns segundos antes de intervir. Pergunte “O que você esperava ver?” e “Qual linha podemos mudar?”.
 - Mostre uma dica de cada vez. Se travar, faça o primeiro passo junto e devolva o teclado.
+- Se o editor intimidar, comece pela atividade visual e peça que a criança explique o que cada peça faz. Depois compare com o exemplo resolvido.
 - Não trate erro como fracasso. Diga “O computador nos deu uma pista”.
 - Ao terminar, peça uma alteração autoral pequena: outro nome de planeta, outro número ou outra pergunta.
 

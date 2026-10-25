@@ -36,6 +36,8 @@ As **42 missões de Python** são interativas no site. O último módulo é um p
 ## Como ensinamos
 
 - Uma ideia nova por missão, instruções curtas e resposta imediata.
+- Cada uma das 42 missões tem uma explicação contextual e um exemplo resolvido, com código e saída conferida, nos três idiomas.
+- Há 14 atividades visuais com peças para ordenar, caixas para classificar e opções para prever resultados. É possível arrastar com o mouse ou usar toque, clique e teclado; a atividade não bloqueia o editor.
 - Repetição com variação: um conceito volta em outros contextos.
 - Dicas graduais e erros tratados como pistas, sem punição por tentativas.
 - Um mundo visual reage ao resultado de cada programa e pode ser personalizado; o cartão criado é salvo no aparelho, sem envio a um servidor.
@@ -47,7 +49,7 @@ Essas escolhas se inspiram em princípios de aprendizagem por prática e feedbac
 
 ## Para quem desenvolve
 
-O site é HTML, CSS e JavaScript sem compilação. Python roda em um Web Worker do tipo módulo usando [Pyodide 314.0.7](https://pyodide.org/en/stable/usage/webworker.html), incluído em `docs/pyodide/` para funcionar sem depender de outro site. Os exercícios estão em `docs/lessons.js`, e as traduções em `docs/lesson-en.js`, `docs/lesson-es.js` e `docs/i18n-ui.js`. O código da criança é executado no navegador e um limite de tempo reinicia o Worker se houver um loop infinito.
+O site é HTML, CSS e JavaScript sem compilação. Python roda em um Web Worker do tipo módulo usando [Pyodide 314.0.7](https://pyodide.org/en/stable/usage/webworker.html), incluído em `docs/pyodide/` para funcionar sem depender de outro site. Os exercícios estão em `docs/lessons.js`, as explicações em `docs/guides.js`, as atividades com peças em `docs/visual-lessons.js`, e as traduções em `docs/lesson-en.js`, `docs/lesson-es.js` e `docs/i18n-ui.js`. O código da criança é executado no navegador e um limite de tempo reinicia o Worker se houver um loop infinito.
 
 Para testar localmente, inicie `python3 -m http.server 8000 --directory docs`, abra o endereço no navegador e complete a primeira missão. Confira também o [projeto final](http://localhost:8000/projeto-final/).
 

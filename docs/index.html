@@ -6,12 +6,14 @@
   <meta name="theme-color" content="#17324d">
   <meta id="meta-desc" name="description" content="Missões curtas e divertidas para aprender Python, matemática, geografia, história, física e idiomas.">
   <title>Kids for Dev — Missões de Python</title>
-  <link rel="stylesheet" href="styles.css?v=20261024-2">
-  <script src="lessons.js?v=20261024-2" defer></script>
-  <script src="lesson-en.js?v=20261024-2" defer></script>
-  <script src="lesson-es.js?v=20261024-2" defer></script>
-  <script src="i18n-ui.js?v=20261024-2" defer></script>
-  <script src="app.js?v=20261024-2" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20261025-1">
+  <script src="lessons.js?v=20261025-1" defer></script>
+  <script src="lesson-en.js?v=20261025-1" defer></script>
+  <script src="lesson-es.js?v=20261025-1" defer></script>
+  <script src="guides.js?v=20261025-1" defer></script>
+  <script src="visual-lessons.js?v=20261025-1" defer></script>
+  <script src="i18n-ui.js?v=20261025-1" defer></script>
+  <script src="app.js?v=20261025-1" defer></script>
 </head>
 <body>
   <a class="skip" href="#lesson-title">Ir para a missão</a>
@@ -33,8 +35,10 @@
         <h2 id="lesson-title"></h2>
         <p class="goal" id="goal"></p>
         <div class="concept"><span aria-hidden="true">💡</span><p id="concept"></p></div>
+        <div class="guide"><h3 id="guide-title">Entenda a ideia</h3><p id="explanation"></p><div class="worked-example"><strong id="example-title">Veja outro exemplo</strong><pre id="example-code"></pre><p><strong id="example-output-title">O que aparece:</strong> <span id="example-output"></span></p></div><p id="guide-bridge" class="guide-bridge">Agora use a mesma ideia no desafio abaixo.</p></div>
         <button id="speak" class="text-button" type="button" hidden>🔊 Ouvir palavra</button>
       </article>
+      <section id="visual-card" class="visual-card" aria-labelledby="visual-title" hidden><div class="visual-heading"><span aria-hidden="true">🧩</span><div><p class="eyebrow" id="visual-tag">Pratique com peças</p><h3 id="visual-title">Antes de escrever código</h3></div></div><p id="visual-question"></p><p id="visual-instructions" class="visual-instructions">Arraste as peças ou toque nelas para escolher.</p><div id="visual-area"></div><div class="visual-actions"><button id="visual-check" class="primary" type="button">Conferir</button><button id="visual-reset" class="secondary" type="button">Recomeçar peças</button></div><p id="visual-feedback" role="status" aria-live="polite"></p></section>
       <section class="world-card" aria-labelledby="world-title">
         <div class="world-heading"><div><p class="eyebrow" id="world-tag">Seu mundo</p><h3 id="world-title">Veja seu código ganhar vida</h3></div><span id="world-stars">⭐ 0</span></div>
         <div class="world-controls"><label for="avatar" id="avatar-label">Personagem</label><select id="avatar"><option value="robot">🤖 Robô</option><option value="cat">🐱 Gato</option><option value="dragon">🐉 Dragão</option></select><label for="scene" id="scene-label">Cenário</label><select id="scene"><option value="space">🌌 Espaço</option><option value="forest">🌲 Floresta</option><option value="sea">🌊 Mar</option></select></div>

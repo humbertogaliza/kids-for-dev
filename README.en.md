@@ -35,11 +35,11 @@ See the [learning plan](CURRICULO.en.md), [adult guide for the first lesson](GUI
 
 ## How learning works
 
-Each quest introduces one small idea, offers a hint, and gives immediate feedback. Children may retry freely. Stars and an optional goal of three quests a day mark progress; brief review prompts ask the child to explain their thinking. These choices draw on practice and feedback patterns common in language-learning apps. Kids for Dev is independent and is not affiliated with Duolingo.
+Each of the 42 quests now includes a fuller explanation and a worked Python example with its output. Fourteen visual activities cover ordering blocks, sorting cards into boxes, and predicting results. Children can drag with a mouse or use taps, clicks, and a keyboard; the visual activity does not block the code editor. Children may retry freely. Stars and an optional goal of three quests a day mark progress; brief review prompts ask the child to explain their thinking. These choices draw on practice and feedback patterns common in language-learning apps. Kids for Dev is independent and is not affiliated with Duolingo.
 
 ## Development and privacy
 
-The site uses plain HTML, CSS, and JavaScript. Python runs locally in a module Web Worker through [Pyodide 314.0.7](https://pyodide.org/en/stable/usage/webworker.html), bundled in `docs/pyodide/`. Quests are in `docs/lessons.js`; English and Spanish content is in `docs/lesson-en.js` and `docs/lesson-es.js`. A time limit stops endless loops. Saved stars are shared across languages; code drafts are kept separately for each language.
+The site uses plain HTML, CSS, and JavaScript. Python runs locally in a module Web Worker through [Pyodide 314.0.7](https://pyodide.org/en/stable/usage/webworker.html), bundled in `docs/pyodide/`. Quests are in `docs/lessons.js`, worked examples in `docs/guides.js`, and visual activities in `docs/visual-lessons.js`; English and Spanish content is in `docs/lesson-en.js` and `docs/lesson-es.js`. A time limit stops endless loops. Saved stars are shared across languages; code drafts are kept separately for each language.
 
 Do not ask a child for their full name, photo, location, or GitHub account. An adult should manage publication. There are no ads or analytics. Do not paste secrets into the code editor.
 

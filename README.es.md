@@ -35,11 +35,11 @@ Consulta el [plan de aprendizaje](CURRICULO.es.md), la [guía para adultos](GUIA
 
 ## Cómo se aprende
 
-Cada misión presenta una idea pequeña, ofrece una pista y responde de inmediato. Se puede intentar cuantas veces sea necesario. Las estrellas y una meta opcional de tres misiones diarias muestran el progreso; las preguntas de repaso invitan a explicar el razonamiento. Son prácticas habituales en aplicaciones de aprendizaje de idiomas. Kids for Dev es independiente y no está afiliado a Duolingo.
+Cada una de las 42 misiones incluye una explicación más completa y un ejemplo resuelto de Python con su salida. Hay 14 actividades visuales para ordenar bloques, clasificar tarjetas en cajas y predecir resultados. Se puede arrastrar con el ratón o usar toques, clics y teclado; la actividad visual no bloquea el editor. Se puede intentar cuantas veces sea necesario. Las estrellas y una meta opcional de tres misiones diarias muestran el progreso; las preguntas de repaso invitan a explicar el razonamiento. Son prácticas habituales en aplicaciones de aprendizaje de idiomas. Kids for Dev es independiente y no está afiliado a Duolingo.
 
 ## Desarrollo y privacidad
 
-El sitio usa HTML, CSS y JavaScript sin compilación. Python se ejecuta en el navegador con [Pyodide 314.0.7](https://pyodide.org/en/stable/usage/webworker.html), incluido en `docs/pyodide/`. Las misiones están en `docs/lessons.js`; las traducciones, en `docs/lesson-en.js` y `docs/lesson-es.js`. Un límite de tiempo detiene los bucles infinitos. Las estrellas se comparten entre idiomas; cada idioma conserva su propio borrador de código.
+El sitio usa HTML, CSS y JavaScript sin compilación. Python se ejecuta en el navegador con [Pyodide 314.0.7](https://pyodide.org/en/stable/usage/webworker.html), incluido en `docs/pyodide/`. Las misiones están en `docs/lessons.js`, los ejemplos en `docs/guides.js` y las actividades visuales en `docs/visual-lessons.js`; las traducciones, en `docs/lesson-en.js` y `docs/lesson-es.js`. Un límite de tiempo detiene los bucles infinitos. Las estrellas se comparten entre idiomas; cada idioma conserva su propio borrador de código.
 
 No pidas nombre completo, foto, ubicación ni cuenta de GitHub a un menor. Un adulto debe ocuparse de cualquier publicación. No hay anuncios ni analítica. No pegues contraseñas en el editor.
 

@@ -32,6 +32,7 @@ let runningLessonId;
 let runningLocale;
 let runningCode;
 let worldMessage = "";
+let visualState = null;
 const expandedModules = new Set();
 const avatars = { robot: "🤖", cat: "🐱", dragon: "🐉" };
 const scenes = ["space", "forest", "sea"];
@@ -58,6 +59,142 @@ function setFeedback(message, kind = "") {
 }
 function setOutput(message) { $("output").textContent = message; }
 function setText(id, value) { $(id).textContent = value; }
+function visualActivity() { return window.VISUAL_LESSONS[locale][lessons[current].id]; }
+function visualButton(label, onClick, pressed = false) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "visual-piece";
+  button.textContent = label;
+  button.setAttribute("aria-pressed", String(pressed));
+  button.addEventListener("click", onClick);
+  return button;
+}
+function visualBox(title) {
+  const box = document.createElement("div");
+  box.className = "visual-box";
+  const heading = document.createElement("h4");
+  heading.textContent = title;
+  const pieces = document.createElement("div");
+  pieces.className = "visual-pieces";
+  box.append(heading, pieces);
+  return { box, pieces };
+}
+function dropOn(box, action) {
+  box.addEventListener("dragover", (event) => { event.preventDefault(); box.classList.add("drag-over"); });
+  box.addEventListener("dragleave", () => box.classList.remove("drag-over"));
+  box.addEventListener("drop", (event) => {
+    event.preventDefault();
+    box.classList.remove("drag-over");
+    const value = event.dataTransfer.getData("text/plain");
+    if (/^\d+$/.test(value)) action(Number(value));
+  });
+}
+function resetVisual() {
+  const activity = visualActivity();
+  visualState = activity ? { selected: [], placements: {}, choice: null, picked: null, order: activity.kind === "arrange" ? activity.pieces.map((_, index) => index).reverse() : [] } : null;
+  setText("visual-feedback", "");
+  $("visual-feedback").className = "";
+  renderVisual();
+}
+function renderVisual() {
+  const activity = visualActivity();
+  $("visual-card").hidden = !activity;
+  if (!activity || !visualState) return;
+  setText("visual-question", activity.question);
+  const area = $("visual-area");
+  area.replaceChildren();
+  if (activity.kind === "choose") {
+    const options = document.createElement("div");
+    options.className = "visual-options";
+    activity.options.forEach((label, index) => {
+      const button = visualButton(label, () => { visualState.choice = index; renderVisual(); area.querySelector(`[data-choice-index="${index}"]`)?.focus(); }, visualState.choice === index);
+      button.className = "visual-option";
+      button.dataset.choiceIndex = String(index);
+      options.append(button);
+    });
+    area.append(options);
+    return;
+  }
+  const columns = document.createElement("div");
+  columns.className = "visual-columns";
+  if (activity.kind === "arrange") {
+    const pool = visualBox(ui().visualPool);
+    const board = visualBox(ui().visualBoard);
+    function move(index, destination) {
+      if (index < 0 || index >= activity.pieces.length) return;
+      visualState.selected = visualState.selected.filter((item) => item !== index);
+      if (destination === "board") visualState.selected.push(index);
+      renderVisual();
+      area.querySelector(`[data-piece-index="${index}"]`)?.focus();
+    }
+    for (const index of visualState.order.filter((item) => !visualState.selected.includes(item))) {
+      const button = visualButton(activity.pieces[index], () => move(index, "board"));
+      button.dataset.pieceIndex = String(index);
+      button.draggable = true;
+      button.addEventListener("dragstart", (event) => event.dataTransfer.setData("text/plain", String(index)));
+      pool.pieces.append(button);
+    }
+    for (const index of visualState.selected) {
+      const button = visualButton(activity.pieces[index], () => move(index, "pool"));
+      button.dataset.pieceIndex = String(index);
+      button.draggable = true;
+      button.addEventListener("dragstart", (event) => event.dataTransfer.setData("text/plain", String(index)));
+      board.pieces.append(button);
+    }
+    dropOn(pool.box, (index) => move(index, "pool"));
+    dropOn(board.box, (index) => move(index, "board"));
+    columns.append(pool.box, board.box);
+  } else if (activity.kind === "sort") {
+    const pool = visualBox(ui().visualPool);
+    activity.cards.forEach((card, index) => {
+      if (visualState.placements[index] !== undefined) return;
+      const button = visualButton(card.label, () => { visualState.picked = index; renderVisual(); area.querySelector(`[data-piece-index="${index}"]`)?.focus(); }, visualState.picked === index);
+      button.dataset.pieceIndex = String(index);
+      button.draggable = true;
+      button.addEventListener("dragstart", (event) => event.dataTransfer.setData("text/plain", String(index)));
+      pool.pieces.append(button);
+    });
+    area.append(pool.box);
+    activity.bins.forEach((name, bin) => {
+      const target = visualBox(name);
+      const place = document.createElement("button");
+      place.type = "button";
+      place.className = "visual-place";
+      place.textContent = ui().visualPlace;
+      place.setAttribute("aria-label", `${ui().visualPlace}: ${name}`);
+      place.disabled = visualState.picked === null;
+      place.addEventListener("click", () => assign(visualState.picked, bin));
+      target.box.insertBefore(place, target.pieces);
+      activity.cards.forEach((card, index) => {
+        if (visualState.placements[index] !== bin) return;
+        const button = visualButton(card.label, () => assign(index, null));
+        button.dataset.pieceIndex = String(index);
+        target.pieces.append(button);
+      });
+      dropOn(target.box, (index) => assign(index, bin));
+      columns.append(target.box);
+    });
+  }
+  area.append(columns);
+}
+function assign(index, bin) {
+  const activity = visualActivity();
+  if (!activity || index === null || index < 0 || index >= activity.cards.length) return;
+  if (bin === null) delete visualState.placements[index];
+  else visualState.placements[index] = bin;
+  visualState.picked = null;
+  renderVisual();
+  $("visual-area").querySelector(`[data-piece-index="${index}"]`)?.focus();
+}
+function checkVisual() {
+  const activity = visualActivity();
+  if (!activity || !visualState) return;
+  const complete = activity.kind === "choose" ? visualState.choice !== null : activity.kind === "arrange" ? visualState.selected.length === activity.pieces.length : Object.keys(visualState.placements).length === activity.cards.length;
+  const correct = activity.kind === "choose" ? visualState.choice === activity.correct : activity.kind === "arrange" ? visualState.selected.every((item, index) => item === index) : activity.cards.every((card, index) => visualState.placements[index] === card.bin);
+  const feedback = $("visual-feedback");
+  feedback.textContent = !complete ? ui().visualIncomplete : correct ? `${ui().visualCorrect} ${activity.why}` : ui().visualTry;
+  feedback.className = complete && correct ? "good" : "try";
+}
 function renderWorld() {
   const t = ui();
   $("avatar").value = worldChoice.avatar;
@@ -90,6 +227,7 @@ function applyLocale() {
   $("guide-link").href = `https://github.com/humbertogaliza/kids-for-dev/blob/main/GUIA-RESPONSAVEL${locale === "pt" ? "" : `.${locale}`}.md`;
   for (const [id, value] of Object.entries({ "welcome-tag": t.welcomeTag, "welcome-title": t.welcomeTitle, "welcome-desc": t.welcomeDesc, "project-title": t.projectTitle, "project-desc": t.projectDesc, "project-link": t.projectLink, "editor-title": t.codeTitle, reset: t.reset, "result-title": t.resultTitle, hint: t.hintButton, "adult-note-text": t.adultNote, "footer-text": t.footer, "repo-link": t.repo, speak: t.listen })) setText(id, value);
   for (const [id, value] of Object.entries({ "world-tag": t.worldTag, "world-title": t.worldTitle, "avatar-label": t.avatarLabel, "scene-label": t.sceneLabel, "world-help": t.worldHelp, "save-card": t.saveCard, "world-privacy": t.worldPrivacy })) setText(id, value);
+  for (const [id, value] of Object.entries({ "guide-title": t.guideTitle, "example-title": t.exampleTitle, "example-output-title": t.exampleOutput, "guide-bridge": t.guideBridge, "visual-tag": t.visualTag, "visual-title": t.visualTitle, "visual-instructions": t.visualInstructions, "visual-check": t.visualCheck, "visual-reset": t.visualReset })) setText(id, value);
   $("avatar").querySelectorAll("option").forEach((option, index) => { option.textContent = t.avatars[index]; });
   $("scene").querySelectorAll("option").forEach((option, index) => { option.textContent = t.scenes[index]; });
   $("project-link").href = `projeto-final/index.html?lang=${locale}`;
@@ -157,6 +295,10 @@ function show(index) {
   setText("lesson-title", lesson.title);
   setText("goal", lesson.goal);
   setText("concept", lesson.concept);
+  const guide = window.LESSON_GUIDES[locale][lesson.id];
+  setText("explanation", guide.explanation);
+  setText("example-code", guide.example);
+  setText("example-output", guide.output);
   $("code").value = progress.drafts[draftKey(lesson.id)] ?? (locale === "pt" ? progress.drafts[lesson.id] : undefined) ?? lesson.starter;
   $("previous").disabled = index === 0;
   setText("previous", t.previous);
@@ -167,6 +309,7 @@ function show(index) {
   setFeedback(progress.done.includes(lesson.id) ? t.alreadyDone : "");
   worldMessage = "";
   renderWorld();
+  resetVisual();
   renderNav();
   renderProgress();
 }
@@ -174,7 +317,7 @@ function startWorker() {
   workerReady = false;
   $("run").disabled = true;
   setText("run", ui().loading);
-  worker = new Worker("python-worker.js?v=20261024-2", { type: "module" });
+  worker = new Worker("python-worker.js?v=20261025-1", { type: "module" });
   worker.onmessage = (event) => {
     if (event.data.type === "ready") {
       workerReady = true;
@@ -247,6 +390,8 @@ $("language").addEventListener("change", (event) => {
   applyLocale();
   show(current);
 });
+$("visual-check").addEventListener("click", checkVisual);
+$("visual-reset").addEventListener("click", resetVisual);
 for (const id of ["avatar", "scene"]) $(id).addEventListener("change", (event) => {
   worldChoice[id] = event.target.value;
   try { localStorage.setItem(worldKey, JSON.stringify(worldChoice)); } catch (_) { /* Escolha vale nesta visita. */ }
